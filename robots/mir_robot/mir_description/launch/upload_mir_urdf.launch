@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<launch>
+  <arg name="mir_type"  default="mir_100" doc="The MiR variant. Can be 'mir_100' or 'mir_250' for now." />
+  <arg name="tf_prefix" default="" doc="TF prefix to use for all of the MiR's TF frames"/>
+  <arg name="transmission_hw_interface" default="hardware_interface/EffortJointInterface"/>
+  <param name="robot_description" command="$(find xacro)/xacro $(find mir_description)/urdf/mir_ur5e.urdf.xacro mir_type:=$(arg mir_type) tf_prefix:=$(arg tf_prefix) transmission_hw_interface:=$(arg transmission_hw_interface)"/>
+</launch>

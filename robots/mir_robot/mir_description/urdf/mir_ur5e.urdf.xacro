@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro"
+       name="mir_100" >
+
+  <!-- MiR100 base -->
+  <xacro:include filename="$(find mir_description)/urdf/include/mir_100_v1.urdf.xacro" />
+  
+  <xacro:include filename="$(find mir_description)/urdf/include/common.gazebo.xacro" />
+  
+  <!-- UR5E base -->
+  <xacro:include    filename="$(find ur_description)/urdf/inc/ur5e_macro.xacro">
+    <xacro:arg name="transmission_hw_interface" value="$(arg transmission_hw_interface)" />
+  </xacro:include>
+
+  <xacro:mir_100 prefix=""/>
+  <xacro:controller_plugin_gazebo robot_namespace=""/>
+
+
+  <!-- MIR + UR5E + Robotiq + Kinect V2-->
+  <xacro:ur5e_robot prefix="ur5e" />
+
+  <joint name="ur5e_fixed_joint" type="fixed">
+    <origin xyz="0 0 0.35" rpy="0 0 0" />
+    <parent link="base_link"/>
+    <child link="ur5ebase_link"/>
+  </joint>
+
+
+  <joint name="ur5e_tool_joint" type="fixed">
+    <axis xyz="0 1 0" />
+    <origin xyz="0.0 0.0 0.03" rpy="0.0 0.0 0.0"/>
+    <parent link="ur5etool0"/>
+    <child link="box_tool_link"/>
+  </joint>
+
+  <link name="box_tool_link">
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <!--box size="0.3 0.3 0.3"/-->
+        <sphere radius="0.03"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius="0.03"/>
+      </geometry>
+    </visual>
+    <inertial>
+      <mass value="1e-5" />
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+    </inertial>
+  </link>
+ 
+
+ 
+  <gazebo reference="$(arg tf_prefix)ur5ewrist_3_joint">
+    <provideFeedback>true</provideFeedback>
+  </gazebo>
+  <gazebo>
+    <plugin name="wrench" filename="libgazebo_ros_ft_sensor.so">
+      <updateRate>100.0</updateRate>
+      <topicName>wrench</topicName>
+      <jointName>$(arg tf_prefix)ur5ewrist_3_joint</jointName>
+    </plugin>
+  </gazebo>
+  
+</robot>

@@ -1,0 +1,31 @@
+<?xml version="1.0" ?>
+<launch>
+  <arg name="tf_prefix" default="" />
+  <!--for real robot, you can identify these topic and control it-->
+  <arg name="TOPIC_ARM_STATE" default="/cartesian_velocity_controller/ee_state"/>
+  <arg name="TOPIC_REFERENCE_ARM_STATE" default="/reference_ee_state"/>
+  <arg name="TOPIC_ARM_COMMAND" default="/cartesian_velocity_controller/command_cart_vel"/>
+  <arg name="TOPIC_WRENCH_STATE" default="/wrench"/>
+  <arg name="TOPIC_REFERENCE_WRENCH_STATE" default="/reference_wrench"/>
+  <arg name="TOPIC_CAR_COMMAND" default="/cmd_vel"/>
+  <arg name="BASE_LINK" default="ur5ebase_link"/>
+  <arg name="END_LINK" default="ur5etool0"/>
+
+  <param name="topic_car_state" value="/base_pose_ground_truth"/>
+  <param name="topic_car_reference_state" value="/base_pose_ground_truth"/>
+  <param name="topic_arm_state" value="$(arg TOPIC_ARM_STATE)"/>
+  <param name="topic_arm_reference_state" value="$(arg TOPIC_REFERENCE_ARM_STATE)"/>
+  <param name="topic_arm_command" value="$(arg TOPIC_ARM_COMMAND)"/>
+  <param name="topic_wrench_state" value="$(arg TOPIC_WRENCH_STATE)"/>
+  <param name="topic_wrench_reference_state" value="$(arg TOPIC_REFERENCE_WRENCH_STATE)"/>
+  <param name="topic_car_command" value="$(arg TOPIC_CAR_COMMAND)"/>
+  <param name="base_link" value="$(arg BASE_LINK)"/>
+  <param name="end_link" value="$(arg END_LINK)"/>
+
+
+  <rosparam file="$(find admittance)/config/HybridAdmittanceParams.yaml" command="load"/>
+
+  <node pkg="admittance" name="admittance" type="hybridadmittance_node" output="screen"/>
+  <node pkg="admittance" name="reference_node" type="reference_node" output="screen"/>
+
+</launch>

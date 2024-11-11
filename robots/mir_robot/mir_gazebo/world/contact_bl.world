@@ -1,0 +1,68 @@
+<?xml version="1.0" ?>
+<sdf version="1.5">
+  <world name="default">
+    <physics type="ode">
+      <real_time_update_rate>2000</real_time_update_rate>
+    </physics>
+
+    <include> 
+      <uri>model://sun</uri>
+    </include>
+    <model name="world">
+      <include>
+        <uri>model://ground_plane</uri>
+      </include>
+      <link name="boxlink">
+        <pose> 7 0.71 0.5 0 0 0</pose>
+        <collision name="box_collision">
+          <geometry>
+            <box>
+              <size>10000 0.1 2</size>
+            </box>
+          </geometry>
+          <surface>
+            <contact>
+              <ode>
+                <kp>1e3</kp>
+                <kd>1e2</kd>
+              </ode>
+            </contact>
+          </surface>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>10000 0.1 2</size>
+            </box>
+          </geometry>
+        </visual>
+        <!--sensor name="my_contact" type="contact">
+          <contact>
+            <collision>box_collision</collision>
+          </contact>
+          <plugin name="my_plugin" filename="libContactPlugin.so" />
+        </sensor-->
+      </link> 
+                
+      <include>
+        <uri>model://trapezoid</uri>
+        <pose> -1000 -0.5 0 0 0 1.57079</pose>
+      </include>
+      <!--pose> 10 -0.5 0 0 0 1.57079</pose-->
+
+      <joint name="ur5e_fixed_joint" type="fixed">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <parent link="trapezoid::link"/>
+        <child link="ground_plane::link"/>
+      </joint>
+      <joint name="disturb1_fixed_joint" type="fixed">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <parent link="disturb1"/>
+        <child link="ground_plane::link"/>
+      </joint>
+      
+    </model>
+    
+
+  </world>
+</sdf>
